@@ -37,7 +37,7 @@
         
     
     
-    <link rel="next" href="../angular2/index.html" />
+    <link rel="next" href="../execute/compile.html" />
     
     
     <link rel="prev" href="../execute/index.html" />
@@ -53,7 +53,7 @@
         data-chapter-title="启动流程"
         data-filepath="execute/start.md"
         data-basepath=".."
-        data-revision="Tue Dec 29 2015 19:29:43 GMT+0800 (CST)"
+        data-revision="Wed Dec 30 2015 15:00:16 GMT+0800 (CST)"
         data-innerlanguage="">
     
 
@@ -115,7 +115,15 @@
     
         <li class="chapter " data-level="1.2" data-path="execute/compile.html">
             
-            <span><b>1.2.</b> 链接、编译过程</span>
+                
+                    <a href="../execute/compile.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.2.</b>
+                        
+                        链接、编译过程
+                    </a>
             
             
         </li>
@@ -387,9 +395,11 @@
                 
                     <section class="normal" id="section-">
                     
-                        <h2 id="&#x542F;&#x52A8;&#x6D41;&#x7A0B;">&#x542F;&#x52A8;&#x6D41;&#x7A0B;</h2>
-<p>Angular&#x7248;&#x672C;&#x4E3A;1.3.0&#xFF0C;&#x672C;&#x6587;&#x4E3B;&#x8981;&#x5206;&#x6790;Angular&#x7684;&#x57FA;&#x672C;&#x542F;&#x52A8;&#x6D41;&#x7A0B;&#x3002;&#x9996;&#x5148;&#x6839;&#x636E;&#x6D41;&#x7A0B;&#x56FE;&#x5206;&#x6790;&#x6574;&#x4F53;&#x7684;&#x542F;&#x52A8;&#x8FC7;&#x7A0B;&#xFF0C;&#x7136;&#x540E;&#x8BE6;&#x7EC6;&#x5206;&#x6790;&#x5404;&#x4E2A;&#x6A21;&#x5757;&#x3002;&#x542F;&#x52A8;&#x6D41;&#x7A0B;&#x5982;&#x4E0B;&#xFF1A;</p>
-<h3 id="angular&#x542F;&#x52A8;&#x6D41;&#x7A0B;">angular&#x542F;&#x52A8;&#x6D41;&#x7A0B;</h3>
+                        <p>Angular&#x7248;&#x672C;&#x4E3A;1.3.0&#xFF0C;&#x672C;&#x6587;&#x4E3B;&#x8981;&#x5206;&#x6790;Angular&#x7684;&#x57FA;&#x672C;&#x542F;&#x52A8;&#x6D41;&#x7A0B;&#x3002;&#x9996;&#x5148;&#x6839;&#x636E;&#x6D41;&#x7A0B;&#x56FE;&#x5206;&#x6790;&#x6574;&#x4F53;&#x7684;&#x542F;&#x52A8;&#x8FC7;&#x7A0B;&#xFF0C;&#x7136;&#x540E;&#x8BE6;&#x7EC6;&#x5206;&#x6790;&#x5404;&#x4E2A;&#x6A21;&#x5757;&#x3002;</p>
+<p>&#x6D41;&#x7A0B;&#x56FE;&#x5982;&#x4E0B;:</p>
+<p><img src="https://github.com/hexiaoming/ng-code/blob/master/images/Angular%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B.png?raw=true =348x720" alt="angular&#x542F;&#x52A8;&#x6D41;&#x7A0B;&#x56FE;"></p>
+<h3 id="&#x542F;&#x52A8;&#x6D41;&#x7A0B;">&#x542F;&#x52A8;&#x6D41;&#x7A0B;</h3>
+<p>&#x6839;&#x636E;&#x542F;&#x52A8;&#x6D41;&#x7A0B;&#x56FE;&#xFF0C;&#x5206;&#x6790;&#x6E90;&#x7801;&#x5173;&#x952E;&#x90E8;&#x5206;&#x5982;&#x4E0B;&#xFF1A;</p>
 <pre><code>(function(window, document, undefined) {&apos;use strict&apos;;
 
   // &#x5982;extend()&#x7B49;&#x4E00;&#x4E9B;&#x901A;&#x7528;&#x65B9;&#x6CD5;
@@ -414,10 +424,8 @@
   });
 
 })(window, document);
-</code></pre><p>&#x6D41;&#x7A0B;&#x56FE;&#x5982;&#x4E0B;:</p>
-<p><img src="Angular&#x542F;&#x52A8;&#x6D41;&#x7A0B;.png =348x720" alt="angular&#x542F;&#x52A8;&#x6D41;&#x7A0B;&#x56FE;"></p>
-<p>&#x5176;&#x4E2D;&#x521D;&#x59CB;&#x5316;&#x6709;&#x4E09;&#x4E2A;&#x51FD;&#x6570;&#xFF0C;&#x4E0B;&#x9762;&#x9488;&#x5BF9;<code>bindJQuery</code>&#x3001;<code>publishExternalAPI</code>&#x548C;<code>angularInit</code>&#x4E09;&#x4E2A;&#x90E8;&#x5206;&#x8BE6;&#x7EC6;&#x5206;&#x6790;&#x3002;</p>
-<h4 id="bindjquery">bindJQuery</h4>
+</code></pre><p>&#x5176;&#x4E2D;&#x521D;&#x59CB;&#x5316;&#x6709;&#x4E09;&#x4E2A;&#x51FD;&#x6570;&#xFF0C;&#x4E0B;&#x9762;&#x9488;&#x5BF9;<code>bindJQuery</code>&#x3001;<code>publishExternalAPI</code>&#x548C;<code>angularInit</code>&#x4E09;&#x4E2A;&#x90E8;&#x5206;&#x8BE6;&#x7EC6;&#x5206;&#x6790;&#x3002;</p>
+<h3 id="bindjquery">bindJQuery</h3>
 <p>&#x8FD9;&#x4E2A;&#x65B9;&#x6CD5;&#x7684;&#x4E3B;&#x8981;&#x4F5C;&#x7528;&#x662F;&#x68C0;&#x6D4B;&#x5F53;&#x524D;&#x662F;&#x5426;&#x5F15;&#x7528;<code>JQuery</code>&#xFF0C;&#x6CA1;&#x6709;&#x5219;&#x5F15;&#x5165;Angular&#x81EA;&#x5E26;&#x7684;<code>jQLite</code>&#x6A21;&#x5757;&#xFF0C;&#x5426;&#x5219;&#x4F7F;&#x7528;&#x5F15;&#x7528;&#x7684;<code>jQuery</code>&#x3002;</p>
 <pre><code>// &#x662F;&#x5426;&#x5DF2;&#x7ECF;&#x7ED1;&#x5B9A;&#x8FC7;jQuery
 var bindJQueryFired = false;
@@ -446,7 +454,7 @@ function bindJQuery() {
   // &#x5DF2;&#x7ECF;&#x7ED1;&#x5B9A;&#x8FC7;&#xFF0C;&#x542F;&#x52A8;&#x7684;&#x65F6;&#x5019;&#x518D;&#x6B21;&#x8C03;&#x7528;&#x5C31;&#x4E0D;&#x4F1A;&#x518D;&#x7ED1;&#x5B9A;&#x4E86;
   bindJQueryFired = true;
 }
-</code></pre><h4 id="publishexternalapi">publishExternalAPI</h4>
+</code></pre><h3 id="publishexternalapi">publishExternalAPI</h3>
 <ol>
 <li>&#x5C06;&#x5168;&#x5C40;&#x53D8;&#x91CF;angular&#x5BF9;&#x8C61;&#x6302;&#x8F7D;&#x4E00;&#x4E9B;&#x901A;&#x7528;&#x65B9;&#x6CD5;&#x3002;</li>
 <li>&#x6CE8;<code>ngLocale</code>&#x548C;<code>ng</code>&#x4E24;&#x4E2A;&#x6A21;&#x5757;&#xFF08;<code>ng</code>&#x4F9D;&#x8D56;&#x4E8E;<code>ngLocale</code>&#xFF09;&#x3002;</li>
@@ -498,7 +506,7 @@ function bindJQuery() {
   ]);
 }
 </code></pre><h4 id="setupmoduleloader">setupModuleLoader</h4>
-<p>&#x5728;<code>publishExternalAPI</code>&#x4E2D;&#xFF0C;&#x7528;&#x5230;&#x4E86;&#x8BE5;&#x65B9;&#x6CD5;&#xFF1A;<code>angularModule = setupModuleLoader(window)</code>:&#x8FD9;&#x662F;&#x6A21;&#x5757;&#x52A0;&#x8F7D;&#x5668;&#xFF0C;&#x5728;angular&#x4E0A;&#x6DFB;&#x52A0;&#x4E86;module&#x65B9;&#x6CD5;&#xFF0C;&#x6CE8;&#x518C;&#x6A21;&#x5757;&#x5E76;&#x8FD4;&#x56DE;&#x6A21;&#x5757;&#x5B9E;&#x4F8B;&#xFF08;&#x5982;&#x4E0A;&#x8FB9;&#x7684;<code>ng</code>&#x548C;<code>ngLocale</code>&#x6A21;&#x5757;&#xFF09;&#x3002;</p>
+<p>&#x5728;<code>publishExternalAPI</code>&#x4E2D;&#xFF0C;&#x7528;&#x5230;&#x4E86;&#x8BE5;&#x65B9;&#x6CD5;&#xFF1A;<code>angularModule = setupModuleLoader(window)</code>:&#x8FD9;&#x662F;&#x6A21;&#x5757;&#x52A0;&#x8F7D;&#x5668;&#xFF0C;&#x5728;angular&#x4E0A;&#x6DFB;&#x52A0;&#x4E86;module&#x65B9;&#x6CD5;&#xFF0C;&#x6CE8;&#x518C;&#x6A21;&#x5757;&#x5E76;&#x8FD4;&#x56DE;&#x6A21;&#x5757;&#x5B9E;&#x4F8B;moduleInstance&#xFF08;&#x5982;&#x4E0A;&#x8FB9;&#x7684;<code>ng</code>&#x548C;<code>ngLocale</code>&#x6A21;&#x5757;&#xFF09;&#x3002;</p>
 <pre><code>function setupModuleLoader(window) {
 
   // &#x5F02;&#x5E38;&#x5904;&#x7406;&#x90E8;&#x5206;
@@ -637,7 +645,7 @@ function bindJQuery() {
 <li><code>run</code>&#x65B9;&#x6CD5;&#x53EA;&#x662F;&#x5C06;&#x9700;&#x8981;&#x6267;&#x884C;&#x7684;block&#x653E;&#x5165;&#x6267;&#x884C;&#x533A;&#x5757;<code>runBlock</code>&#x4E2D;&#xFF0C;&#x5E76;&#x6CA1;&#x6709;&#x653E;&#x5165;<code>invokeQueue</code>&#x4E2D;&#xFF0C;&#x5728;&#x52A0;&#x8F7D;&#x6A21;&#x5757;&#x65F6;&#xFF0C;&#x4F1A;&#x5C06;<code>runBlock</code>&#x4E2D;&#x6240;&#x6709;&#x6267;&#x884C;&#x533A;&#x5757;&#x8C03;&#x7528;<code>invoke</code>&#x8FDB;&#x884C;&#x6267;&#x884C;&#x3002;</li>
 <li>&#x5165;&#x961F;&#x65F6;&#x4E00;&#x822C;&#x6267;&#x884C;<code>push</code>&#x64CD;&#x4F5C;&#xFF0C;<code>constant</code>&#x6267;&#x884C;<code>unshift</code>&#x64CD;&#x4F5C;&#xFF0C;&#x56E0;&#x4E3A;&#x5E38;&#x91CF;&#x9700;&#x8981;&#x88AB;&#x5176;&#x4ED6;&#x533A;&#x5757;&#x6240;&#x8C03;&#x7528;&#xFF0C;&#x56E0;&#x6B64;&#x9700;&#x8981;&#x5728;&#x524D;&#x9762;&#x8FDB;&#x884C;&#x6CE8;&#x5165;&#x3002;</li>
 </ul>
-<h4 id="angularinit&#x51FD;&#x6570;">angularInit&#x51FD;&#x6570;</h4>
+<h3 id="angularinit&#x51FD;&#x6570;">angularInit&#x51FD;&#x6570;</h3>
 <p>&#x5F53;dom ready&#x4E4B;&#x540E;&#xFF0C;&#x8C03;&#x7528;angularInit&#x8FDB;&#x884C;&#x521D;&#x59CB;&#x5316;&#x90E8;&#x5206;&#x3002;</p>
 <ol>
 <li>&#x9996;&#x5148;&#x904D;&#x5386;names&#x6570;&#x7EC4;&#xFF0C;&#x901A;&#x8FC7;document.getElementById(name)&#x6216;&#x8005;querySelectorAll(name)&#x68C0;&#x7D22;&#x5230;element&#x5B58;&#x5230;elements&#x6570;&#x7EC4;&#x4E2D;&#xFF0C;&#x7136;&#x540E;&#x83B7;&#x53D6;&#x5230;appElement&#x548C;module&#x3002;</li>
@@ -820,7 +828,7 @@ providerCache.$injector = providerInjector
   has:has
 }
 </code></pre><p>&#x81F3;&#x6B64;&#xFF0C;<code>module</code>&#x548C;<code>injector</code>&#x5B8C;&#x6210;&#x4E86;Angular&#x4E2D;&#x4F9D;&#x8D56;&#x6CE8;&#x5165;&#x7684;&#x90E8;&#x5206;&#xFF0C;&#x4E0B;&#x9762;&#x4ECB;&#x7ECD;&#x4E24;&#x4E2A;&#x91CD;&#x8981;&#x7684;&#x65B9;&#x6CD5;<code>loadModules</code>&#x548C;<code>createInternalInjector</code>&#x3002;</p>
-<h4 id="createinternalinjector&#x51FD;&#x6570;">createInternalInjector&#x51FD;&#x6570;</h4>
+<h5 id="createinternalinjector&#x51FD;&#x6570;">createInternalInjector&#x51FD;&#x6570;</h5>
 <ul>
 <li>createInternalInjector&#x662F;&#x4E00;&#x4E2A;&#x5DE5;&#x5382;&#xFF0C;&#x8FD4;&#x56DE;&#x4E94;&#x4E2A;&#x65B9;&#x6CD5;&#xFF0C;&#x521B;&#x5EFA;&#x4E00;&#x4E2A;<code>injector</code>&#x5B9E;&#x4F8B;&#x3002;</li>
 </ul>
@@ -933,7 +941,7 @@ providerCache.$injector = providerInjector
     }
 </code></pre><p>getService &#x5148;&#x4ECE; cache &#x4E2D;&#x83B7;&#x53D6; service &#x5B9E;&#x4F8B;&#xFF0C;&#x5982;&#x679C;&#x7F13;&#x5B58;&#x4E2D;&#x6CA1;&#x6709;&#x5C31;&#x6267;&#x884C; service &#x7684;&#x5DE5;&#x5382;&#x65B9;&#x6CD5;&#x751F;&#x6210;&#x5B9E;&#x4F8B;&#xFF0C;&#x7ACB;&#x5373;&#x7F13;&#x5B58;&#x8BE5;&#x5B9E;&#x4F8B;&#xFF0C;&#x7136;&#x540E;&#x8FD4;&#x56DE;&#x8BE5;&#x5B9E;&#x4F8B;&#xFF0C;&#x4E0B;&#x6B21;&#x6709;&#x6A21;&#x5757;&#x9700;&#x8981;&#x8BE5; service &#x5B9E;&#x4F8B;&#x65F6;&#x76F4;&#x63A5;&#x4ECE; cache &#x4E2D;&#x83B7;&#x53D6;&#x5373;&#x53EF;&#x3002;</p>
 <p>&#x6709;&#x4E86;&#x6CE8;&#x5165;&#x5668;&#x5B9E;&#x4F8B;&#xFF0C;&#x518D;&#x56DE;&#x5230; bootstrap &#x51FD;&#x6570;&#xFF0C;&#x4E0B;&#x4E00;&#x6B65;&#x5C31;&#x53EF;&#x4EE5;&#x4ECE; rootElement&#xFF08;ng-app&#x5143;&#x7D20;&#x6240;&#x5728;&#x8282;&#x70B9;&#xFF09;&#x5F00;&#x59CB;&#xFF0C;&#x6CE8;&#x5165; rootScope&#xFF0C;&#x7F16;&#x8BD1;&#x6574;&#x4E2A;&#x6587;&#x6863;&#x4E86;&#x3002;</p>
-<h4 id="loadmodules&#x51FD;&#x6570;">loadModules&#x51FD;&#x6570;</h4>
+<h5 id="loadmodules&#x51FD;&#x6570;">loadModules&#x51FD;&#x6570;</h5>
 <ul>
 <li>loadModules&#x83B7;&#x5F97;&#x6BCF;&#x4E2A;module&#x7684;runBlocks&#x90E8;&#x5206;&#x3002;<ol>
 <li>&#x904D;&#x5386;modulesToLoad&#x6570;&#x7EC4;&#xFF0C;&#x5982;&#x679C;&#x67D0;&#x4E00;&#x9879;&#x4E3A;&#x5B57;&#x7B26;&#x4E32;&#x65F6;&#xFF0C;&#x52A0;&#x8F7D;&#x8BE5;&#x6A21;&#x5757;&#xFF0C;&#x8FD4;&#x56DE;moduleInstance&#x5B9E;&#x4F8B;moduleFn.</li>
@@ -1023,7 +1031,7 @@ providerCache.$injector = providerInjector
         <a href="../execute/index.html" class="navigation navigation-prev " aria-label="Previous page: 执行流程"><i class="fa fa-angle-left"></i></a>
         
         
-        <a href="../angular2/index.html" class="navigation navigation-next " aria-label="Next page: Angular2使用规范"><i class="fa fa-angle-right"></i></a>
+        <a href="../execute/compile.html" class="navigation navigation-next " aria-label="Next page: 链接、编译过程"><i class="fa fa-angle-right"></i></a>
         
     </div>
 </div>

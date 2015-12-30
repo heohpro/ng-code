@@ -1,8 +1,12 @@
-##启动流程
+Angular版本为1.3.0，本文主要分析Angular的基本启动流程。首先根据流程图分析整体的启动过程，然后详细分析各个模块。
 
-Angular版本为1.3.0，本文主要分析Angular的基本启动流程。首先根据流程图分析整体的启动过程，然后详细分析各个模块。启动流程如下：
+流程图如下:
 
-###angular启动流程
+![angular启动流程图](https://github.com/hexiaoming/ng-code/blob/master/images/Angular%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B.png?raw=true =348x720)
+
+###启动流程
+
+根据启动流程图，分析源码关键部分如下：
 
 ```
 (function(window, document, undefined) {'use strict';
@@ -30,13 +34,11 @@ Angular版本为1.3.0，本文主要分析Angular的基本启动流程。首先�
 
 })(window, document);
 ```
-流程图如下:
-
-![angular启动流程图](Angular启动流程.png =348x720)
 
 其中初始化有三个函数，下面针对`bindJQuery`、`publishExternalAPI`和`angularInit`三个部分详细分析。
 
-####bindJQuery
+###bindJQuery
+
 这个方法的主要作用是检测当前是否引用`JQuery`，没有则引入Angular自带的`jQLite`模块，否则使用引用的`jQuery`。
 
 ```
@@ -69,11 +71,12 @@ function bindJQuery() {
 }
 ```
 
-####publishExternalAPI
+###publishExternalAPI
 
 1. 将全局变量angular对象挂载一些通用方法。
 2. 注`ngLocale`和`ng`两个模块（`ng`依赖于`ngLocale`）。
 3. `ng`模块用来注册所有内置的`service`和`directive`(在angularInit之后执行)。
+
 
 ```
 function publishExternalAPI(angular){
@@ -123,9 +126,10 @@ function publishExternalAPI(angular){
 }
 ```
 
+
 ####setupModuleLoader
 
-在`publishExternalAPI`中，用到了该方法：`angularModule = setupModuleLoader(window)`:这是模块加载器，在angular上添加了module方法，注册模块并返回模块实例（如上边的`ng`和`ngLocale`模块）。
+在`publishExternalAPI`中，用到了该方法：`angularModule = setupModuleLoader(window)`:这是模块加载器，在angular上添加了module方法，注册模块并返回模块实例moduleInstance（如上边的`ng`和`ngLocale`模块）。
 
 ```
 function setupModuleLoader(window) {
@@ -275,7 +279,7 @@ args[0][args[1]].apply(args[0],args[2]);
 - `run`方法只是将需要执行的block放入执行区块`runBlock`中，并没有放入`invokeQueue`中，在加载模块时，会将`runBlock`中所有执行区块调用`invoke`进行执行。
 - 入队时一般执行`push`操作，`constant`执行`unshift`操作，因为常量需要被其他区块所调用，因此需要在前面进行注入。
 
-####angularInit函数
+###angularInit函数
 
 当dom ready之后，调用angularInit进行初始化部分。
 
@@ -395,6 +399,7 @@ function bootstrap(element, modules, config) {
 之前的调用`module`、`controller`、`service`等方法都是注册，将其缓存到队列中，只有执行`invoke`方法后才是真正执行该方法并声称实例。
 
 ####createInjector函数
+
 - 实现依赖注入，创建injector实例。
 - createInjector主要是生成四个属性：
  	
@@ -473,7 +478,7 @@ providerCache.$injector = providerInjector
 至此，`module`和`injector`完成了Angular中依赖注入的部分，下面介绍两个重要的方法`loadModules`和`createInternalInjector`。
 
 
-####createInternalInjector函数
+#####createInternalInjector函数
 
 - createInternalInjector是一个工厂，返回五个方法，创建一个`injector`实例。
 
@@ -599,7 +604,7 @@ getService 先从 cache 中获取 service 实例，如果缓存中没有就执�
 
 有了注入器实例，再回到 bootstrap 函数，下一步就可以从 rootElement（ng-app元素所在节点）开始，注入 rootScope，编译整个文档了。
 
-####loadModules函数
+#####loadModules函数
 
 - loadModules获得每个module的runBlocks部分。
 	1. 遍历modulesToLoad数组，如果某一项为字符串时，加载该模块，返回moduleInstance实例moduleFn.
@@ -674,6 +679,7 @@ function loadModules(modulesToLoad){
     return runBlocks;
   }
 ```
+
 到这里在注册ng模块时的回调，在runInvokeQueue(moduleFn._configBlocks);已经执行过了，也就意味着许许多多的内置模块已经存入providerCache中了，所以在后面的依赖注入中我们可以随意调用。
 
 至此，完成了angular的启动过程。
