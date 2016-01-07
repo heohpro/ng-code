@@ -251,4 +251,291 @@ Scope.prototype.$$areEqual = function(newValue, oldValue, valueEq) {
 
 在`$eval`中，可以保证运行的函数在当前作用域下执行，同时，在下面的`$apply`也调用`$eval`来执行函数。
 
-当传入表达式时，它会
+当传入表达式时，它会将表达式编译，然后在作用域的上下文中执行。`$eval`的实现：
+
+```
+Scope.prototype.$eval = function(expr, locals) {
+  return expr(this, locals);
+};
+```
+
+###$apply
+
+我们平常使用时，常常会使用到`$apply`这个方法，它可以将外部库集成到Angular中。在`$apply`中，调用`$eval`这个函数，并且触发digest循环。
+
+为了防止执行`$eval`时抛出异常，将`$eval`执行部分放在`try..catch`中，并将`$digest`放入`finally`中确保一定可以执行。
+
+在执行外部库或者自己扩展的代码时，会改变作用域上绑定的值。此时`$apply`可以保证作用域可以检测到这些值的变更，相当于将外部代码利用`$apply`集成到Angular的生命周期中。
+
+```
+Scope.prototype.$apply = function(expr) {
+  try {
+    return this.$eval(expr);
+  } finally {
+    this.$digest();
+  }
+};
+```
+
+[查看demo](http://jsbin.com/UzaWUC/2/embed?js,console)
+
+###$evalAsync
+
+若有需求将某一段代码延迟执行，在Angular中有两种方式：
+
+- `$timeout`：用`$apply`封装后的`setTimeOut`方法，将延迟执行的函数集成到digest生命周期里。
+- `$evalAsync`：集成在Scope上的方法，接受一个函数，将其在正持续的digest中或者下一次digest之前执行。通常把需要延迟执行的函数放到监听函数中。
+
+要实现这样的效果，首先要在Scope中初始化一个`$$asyncQueue`来存储`$evalAsync`列入计划的任务。
+
+```
+function Scope() {
+  this.$$watchers = [];
+  this.$$asyncQueue = [];
+}
+```
+然后定义函数`$evalAsync`，将当前的作用域以及需要执行的函数存入`$$asyncQueue`中。
+
+```
+Scope.prototype.$evalAsync = function(expr) {
+  this.$$asyncQueue.push({scope: this, expression: expr});
+};
+```
+之后，在`$digest`中，从队列中取出每一个延迟执行的方法，调用`$eval`来执行。
+
+```
+Scope.prototype.$digest = function() {
+  var ttl = 10;
+  var dirty;
+  do {
+    while (this.$$asyncQueue.length) {
+      var asyncTask = this.$$asyncQueue.shift();
+      this.$eval(asyncTask.expression);
+    }
+    dirty = this.$$digestOnce();
+    if (dirty && !(ttl--)) {
+      throw "10 digest iterations reached";
+    }
+  } while (dirty);
+};
+```
+
+[查看demo](http://jsbin.com/ilepOwI/1/embed?js,console)
+
+###作用域阶段
+如果当前没有正在执行的$digest时，需要触发一个digest来执行这部分延迟代码，需要保证当调用`$evalAsync`时，需要延迟执行的函数能尽快地被执行。
+
+因此，我们需要一个状态来判断当前是否有digest正在运行，如果有，不想影响到正在被执行的digest，如果没有，则延迟触发一个digest。所以我们在Scope中用`$$phase`来保存当前的阶段，存储正在运行的信息。
+
+```
+function Scope() {
+  this.$$watchers = [];
+  this.$$asyncQueue = [];
+  this.$$phase = null;
+}
+```
+对于阶段的处理，建立两个方法来控制`$$parse`。一个用于设置，一个用于清除，在设置中额外判断一下当前是否有digest正在执行。
+
+```
+Scope.prototype.$beginPhase = function(phase) {
+  if (this.$$phase) {
+    throw this.$$phase + ' already in progress.';
+  }
+  this.$$phase = phase;
+};
+
+Scope.prototype.$clearPhase = function() {
+  this.$$phase = null;
+};
+```
+在`$digest`和`$apply`方法的外层，通过不同的字面量来自设置阶段属性。
+
+```
+Scope.prototype.$digest = function() {
+  var ttl = 10;
+  var dirty;
+  this.$beginPhase("$digest");
+  do {
+    while (this.$$asyncQueue.length) {
+      var asyncTask = this.$$asyncQueue.shift();
+      this.$eval(asyncTask.expression);
+    }
+    dirty = this.$$digestOnce();
+    if (dirty && !(ttl--)) {
+      this.$clearPhase();
+      throw "10 digest iterations reached";
+    }
+  } while (dirty);
+  this.$clearPhase();
+};
+Scope.prototype.$apply = function(expr) {
+  try {
+    this.$beginPhase("$apply");
+    return this.$eval(expr);
+  } finally {
+    this.$clearPhase();
+    this.$digest();
+  }
+};
+```
+这样完成了对当前状态的保存和判断，下面在`$evalAsync`中，加入对`$$phase`的判断，如果没有，则主动触发一次digest。来保证当调用`$evalAsync`时总有一个digest会发生。
+
+```
+Scope.prototype.$evalAsync = function(expr) {
+  var self = this;
+  if (!self.$$phase && !self.$$asyncQueue.length) {
+    setTimeout(function() {
+      if (self.$$asyncQueue.length) {
+        self.$digest();
+      }
+    }, 0);
+  }
+  self.$$asyncQueue.push({scope: self, expression: expr});
+};
+```
+
+[查看demo](http://jsbin.com/ilepOwI/1/embed?js,console)
+
+###$$postDigest在digest之后执行代码
+在Scope上，有属性`$$postDigest`来存储在digest之后执行的代码块，然后在digest之后执行。如果在`$$postDigest`中修改了作用域，需要手动的调用`$digest`或`$apply`使改动生效。
+
+首先在Scope中添加`$$postDigestQueue`数组。
+
+```
+function Scope() {
+  this.$$watchers = [];
+  this.$$asyncQueue = [];
+  this.$$postDigestQueue = [];
+  this.$$phase = null;
+}
+```
+然后定义`$$postDigest`方法，就是将执行的方法加入队列中。
+
+```
+Scope.prototype.$$postDigest = function(fn) {
+  this.$$postDigestQueue.push(fn);
+};
+```
+
+最后在digest循环中，最后执行`$$postDigestQueue`中的所有方法。
+
+```
+Scope.prototype.$digest = function() {
+  var ttl = 10;
+  var dirty;
+  this.$beginPhase("$digest");
+  do {
+    while (this.$$asyncQueue.length) {
+      var asyncTask = this.$$asyncQueue.shift();
+      this.$eval(asyncTask.expression);
+    }
+    dirty = this.$$digestOnce();
+    if (dirty && !(ttl--)) {
+      this.$clearPhase();
+      throw "10 digest iterations reached";
+    }
+  } while (dirty);
+  this.$clearPhase();
+
+  while (this.$$postDigestQueue.length) {
+    this.$$postDigestQueue.shift()();
+  }
+};
+```
+
+[查看Demo](http://jsbin.com/IMEhowO/1/embed?js,console)
+
+###异常处理
+
+我们需要完善Scope的异常处理机制，在Angular中，当遇到异常的时候，不管在`$evalAsync`、`$$digestOnce`和`$$postDigest`中遇到异常都不会中止正在执行的digest。
+
+因此我们需要在以上三个地方加入`try...catch`。当遇到错误时，将异常抛给日志，并继续执行。
+
+`$$digestOnce`:
+
+```
+Scope.prototype.$$digestOnce = function() {
+  var self  = this;
+  var dirty;
+  _.forEach(this.$$watchers, function(watch) {
+    try {
+      var newValue = watch.watchFn(self);
+      var oldValue = watch.last;
+      if (!self.$$areEqual(newValue, oldValue, watch.valueEq)) {
+        watch.listenerFn(newValue, oldValue, self);
+        dirty = true;
+      }
+      watch.last = (watch.valueEq ? _.cloneDeep(newValue) : newValue);
+    } catch (e) {
+      (console.error || console.log)(e);
+    }
+  });
+  return dirty;
+};
+```
+`$evalAsync`和`$$postDigest`:
+
+```
+Scope.prototype.$digest = function() {
+  var ttl = 10;
+  var dirty;
+  this.$beginPhase("$digest");
+  do {
+    while (this.$$asyncQueue.length) {
+      try {
+        var asyncTask = this.$$asyncQueue.shift();
+        this.$eval(asyncTask.expression);
+      } catch (e) {
+        (console.error || console.log)(e);
+      }
+    }
+    dirty = this.$$digestOnce();
+    if (dirty && !(ttl--)) {
+      this.$clearPhase();
+      throw "10 digest iterations reached";
+    }
+  } while (dirty);
+  this.$clearPhase();
+
+  while (this.$$postDigestQueue.length) {
+    try {
+      this.$$postDigestQueue.shift()();
+    } catch (e) {
+      (console.error || console.log)(e);
+    }
+  }
+};
+```
+[查看Demo](http://jsbin.com/IMEhowO/2/embed?js,console)
+
+###销毁监听器
+
+当一个监听器创建之后，会一直存在作用域的生命周期中，但有时我们有需求需要销毁某个监听器。
+
+因为监听器是存储在`$$scope.watchers`中，若想移除，直接把这个监控器从`$$watchers`数组中去除就可以了。我们把销毁监听器的方法写在`$watch`的回调中，获取该监听器的index，并在数组中移除。
+
+```
+Scope.prototype.$watch = function(watchFn, listenerFn, valueEq) {
+  var self = this;
+  var watcher = {
+    watchFn: watchFn,
+    listenerFn: listenerFn,
+    valueEq: !!valueEq
+  };
+  self.$$watchers.push(watcher);
+  return function() {
+    var index = self.$$watchers.indexOf(watcher);
+    if (index >= 0) {
+      self.$$watchers.splice(index, 1);
+    }
+  };
+};
+```
+至此，我们可以用变量暂存`$watch`的返回值，即该监听器的销毁函数。
+
+[查看Demo](http://jsbin.com/IMEhowO/4/embed?js,console)
+
+###小结
+
+至此，我们基本实现了Angular中的Scope构造函数，并且对脏值检测和双向绑定有了一个基本的认识。下面在内置指令的源码解析中，结合Scope的部分深入分析Angular中的双向数据绑定部分。
+

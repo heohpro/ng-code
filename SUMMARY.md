@@ -3,7 +3,7 @@
 * [执行流程](execute/README.md)
  - [启动流程](execute/start.md)
  - [链接、编译过程](execute/compile.md)
- - [运行过程](execute/run.md)
+ - [运行过程](execute/scope.md)
 * [Angular2使用规范](angular2/README.md)
  - [基本流程](angular2/execute.md)
  - [模块功能](angular2/module/README.md)
@@ -18,3 +18,5 @@
  	- [表单指令](angular2/module/表单指令.md)
  	- [Service](angular2/module/服务.md)
  	- [路由](angular2/module/路由.md)
+ 	
+* [修订日志](LOG.md)
