@@ -558,7 +558,7 @@ obj2.internal.a = "anotherValue";
 obj2.internal.a; // undefined
 ```
 
-####Object.setPrototypeOf **TODO**
+####Object.setPrototypeOf 
 
 Object.setPrototypeOf() 将一个指定的对象的原型设置为另一个对象或者null(既对象的[[Prototype]]内部属性).
 
@@ -835,7 +835,7 @@ var obj = Object.create({foo: 1}, { // foo 是个继承属性。
 var copy = Object.assign({}, obj);
 console.log(copy); // { baz: 3 }
 ```
-例子：原始值会被隐式转换成其包装对象  **TODO**
+例子：原始值会被隐式转换成其包装对象 
 
 ```
 var v1 = "123";
@@ -897,7 +897,7 @@ console.log(copy);
 // {foo:1, get bar() {return 2}}，访问器属性也原封不动拷过来了。
 ```
 
-####Object.is  TODO
+####Object.is 
 
 Object.is方法用来判断两个值是否是同一个值。
 
