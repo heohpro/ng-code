@@ -222,6 +222,8 @@ scope.someIsolateProp = "I'm isolated"
 3. `Isolate`作用域 -- `scope: {...}`， 该作用域没有原型继承，但可以通过'=', '@', 和 '&'与父作用域通信。
 3. `transclude`作用域 -- 设置了`transclude: true`的指令。这种作用域也是常规的原型继承，但它和任何封闭作用域是同级关系。
 
+###引用
+
 [深入浅出 AngularJS 作用域](https://www.zybuluo.com/lxjwlt/note/107324)
 
 [Understanding Scopes](https://github.com/angular/angular.js/wiki/Understanding-Scopes)

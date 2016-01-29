@@ -11,3 +11,8 @@
 
 ![悲伤的故事](https://github.com/hexiaoming/ng-code/blob/master/images/%E8%B6%8B%E5%8A%BF.png?raw=true)
 
+- 1.15
+完成作用域继承部分。
+
+- 1.28
+完成依赖注入部分。
