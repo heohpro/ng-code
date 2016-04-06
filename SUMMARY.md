@@ -6,6 +6,7 @@
  - [运行过程](execute/scope.md)
 * [作用域部分](scope/scope.md)
  - [作用域的继承](scope/scope.md)
+ - [rootScope&parser](scope/parserProvider.md)
 * [依赖注入](DI/$provide.md)
  - [$provide供应商](DI/$provide.md)
 * [Angular2使用规范](angular2/README.md)
