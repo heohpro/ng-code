@@ -1,4 +1,7 @@
-##RootScopeProvider
+#RootScope&$parse
+本篇着重介绍`rootscope`中的各个接口以及文法解析器`$parse`。
+
+##RootScope
 今天这个`rootscope`可是angularjs里面比较活跃的一个provider,大家可以理解为一个模型M或者VM,它主要负责与控制器或者指令进行数据交互。
 
 ###从$get属性说起
